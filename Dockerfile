@@ -36,6 +36,7 @@ COPY . /workspace
 RUN ls -la
 USER root
 RUN chmod +x /workspace/starter.sh
+RUN mkdir /workspace/notebook/apps
 RUN chmod +x /workspace/notebook/apps && chown -R llmstudio:llmstudio /workspace/notebook/apps
 USER llmstudio
 #add sd tools
