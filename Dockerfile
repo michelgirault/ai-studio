@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip install Wave --no-input
 RUN pip install h2o-wave --no-input
 #add additional lib missing
-RUN apt update && apt install -y libgoogle-perftools-dev bc nvidia-cuda-toolkit
+RUN apt update && apt install -y libgoogle-perftools-dev bc
 #install jupyter for fine tuning
 RUN pip install jupyterlab --no-input
 #RUN pip install --upgrade "elyra[all]" --no-input
@@ -33,6 +33,7 @@ RUN \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 && \
     chmod -R a+w /home/llmstudio
 COPY . /workspace
+RUN ls -la
 USER root
 RUN chmod +x /workspace/starter.sh
 RUN chmod +x /workspace/notebook/apps && chown -R llmstudio:llmstudio /workspace/notebook/apps
