@@ -38,6 +38,7 @@ USER root
 RUN chmod +x /workspace/starter.sh
 RUN mkdir /workspace/notebook/apps
 RUN chmod +x /workspace/notebook/apps && chown -R llmstudio:llmstudio /workspace/notebook/apps
+RUN chmod +x /workspace/notebook/ && chown -R llmstudio:llmstudio /workspace/notebook/
 USER llmstudio
 #add sd tools
 ENV HOME=/home/llmstudio
