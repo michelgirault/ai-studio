@@ -1,6 +1,8 @@
 FROM nvidia/cuda:12.3.1-base-ubuntu22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -15,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip install Wave --no-input
 RUN pip install h2o-wave --no-input
 #add additional lib missing
-RUN apt update && apt install -y libgoogle-perftools-dev bc
+RUN apt update && apt install -y libgoogle-perftools-dev bc python3-opencv ffmpeg
 #install jupyter for fine tuning
 RUN pip install jupyterlab --no-input
 #RUN pip install --upgrade "elyra[all]" --no-input
@@ -51,4 +53,8 @@ ENV H2O_WAVE_PRIVATE_DIR="/download/@/workspace/output/download"
 EXPOSE 10101
 #for jupyter
 EXPOSE 8887
+#for h2ogpt
+EXPOSE 7860
+#h20gpt openai
+EXPOSE 5000
 CMD [ "/workspace/starter.sh" ]
