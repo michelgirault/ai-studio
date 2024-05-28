@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y \
     && apt install -y python3.10-distutils \
     && apt install -y python3-venv \
     && rm -rf /var/lib/apt/lists/*
+#install git and lfs
+RUN apt install -y git git-lfs
+
 RUN pip install Wave --no-input
 RUN pip install h2o-wave --no-input
 #add additional lib missing
