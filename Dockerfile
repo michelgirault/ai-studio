@@ -27,6 +27,8 @@ RUN pip install jupyterlab --no-input
 RUN pip install pickleshare bash_kernel --no-input
 RUN python3 -m bash_kernel.install
 RUN pip install jupyter-app-launcher s3contents
+#install huggingface api/cli
+RUN pip install -U "huggingface_hub[cli]"
 # Pick an unusual UID for the llmstudio user.
 # In particular, don't pick 1000, which is the default ubuntu user number.
 # Force ourselves to test with UID mismatches in the common case.
