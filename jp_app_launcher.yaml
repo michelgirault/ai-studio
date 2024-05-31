@@ -1,0 +1,33 @@
+- title: Image generator
+  description: Fine tune image 
+  source: ../fine-tune-sd.ipynb
+  cwd: notebook
+  type: notebook
+  catalog: Fine tuning Studio
+
+- title: Image generator - pre render
+  description: Fine tune image 
+  source: ../fine-tune-sd.ipynb
+  cwd: notebook
+  type: notebook-grid
+
+- title: studio h20
+  description: Fine tune image llama only
+  source: ../llmstudio.ipynb
+  cwd: notebook
+  type: notebook
+  catalog: Notebook catalog
+
+- title: studio factory llama and llava
+  description: Fine tune image 
+  source: ../llama-factory.ipynb
+  cwd: notebook
+  type: notebook
+  catalog: Notebook catalog
+
+- title: Chat - model testing 
+  description: Fine tune image 
+  source: ../h2ogpt.ipynb
+  cwd: notebook
+  type: notebook
+  catalog: Testing Studio

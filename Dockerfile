@@ -7,8 +7,9 @@ ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 ENV INSTALL_APT="apt install -y"
 ENV INSTALL_PIP="python3 -m pip --no-cache-dir install --upgrade"
 ENV HOME=/home/llmstudio
+ENV JUPYTER_APP_LAUNCHER_PATH=/workspace/notebook/apps
 
-
+#start update current packages
 RUN apt-get update && apt-get install -y \
     git \
     git-lfs \
@@ -58,7 +59,7 @@ RUN \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 && \
     chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio
 RUN chmod +x /workspace/starter.sh
-RUN mkdir /workspace/notebook/apps
+RUN mkdir /workspace/notebook/apps && mv jp_app_launcher.yaml ${JUPYTER_APP_LAUNCHER_PATH}
 RUN chmod +x /workspace/notebook/apps && chown -R llmstudio:llmstudio /workspace/notebook/apps
 RUN chmod +x /workspace/notebook/ && chown -R llmstudio:llmstudio /workspace/notebook/
 USER llmstudio
