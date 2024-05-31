@@ -41,7 +41,8 @@ RUN $INSTALL_PIP \
     bash_kernel \
     s3contents \
     jupyter-app-launcher \
-    gradient
+    wheel 
+
 
 #install spec for bash kernel
 RUN python3 -m bash_kernel.install
