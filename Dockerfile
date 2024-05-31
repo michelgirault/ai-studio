@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
     libgoogle-perftools-dev \
     bc \
     ffmpeg \
-    pipenv
+    pipenv 
 
 #install python and libs
 RUN add-apt-repository ppa:deadsnakes/ppa && \
@@ -40,7 +40,8 @@ RUN $INSTALL_PIP \
     pickleshare \
     bash_kernel \
     s3contents \
-    jupyter-app-launcher 
+    jupyter-app-launcher \
+    gradient
 
 #install spec for bash kernel
 RUN python3 -m bash_kernel.install
