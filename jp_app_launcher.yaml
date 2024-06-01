@@ -16,14 +16,14 @@
   source: ../llmstudio.ipynb
   cwd: notebook
   type: notebook
-  catalog: Notebook catalog
+  catalog: Fine tuning Studio
 
 - title: studio factory llama and llava
   description: Fine tune image 
   source: ../llama-factory.ipynb
   cwd: notebook
   type: notebook
-  catalog: Notebook catalog
+  catalog: Fine tuning Studio
 
 - title: Chat - model testing 
   description: Fine tune image 

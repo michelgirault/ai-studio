@@ -48,7 +48,7 @@ RUN $INSTALL_PIP \
 RUN python3 -m bash_kernel.install
 
 
-#based on llmstudio from h2o
+#based on llmstudio from h2o setup
 
 RUN adduser --uid 1999 llmstudio
 USER llmstudio
@@ -65,12 +65,15 @@ RUN mkdir /workspace/notebook/apps && mv jp_app_launcher.yaml ${JUPYTER_APP_LAUN
 RUN chmod +x /workspace/notebook/apps && chown -R llmstudio:llmstudio /workspace/notebook/apps
 RUN chmod +x /workspace/notebook/ && chown -R llmstudio:llmstudio /workspace/notebook/
 USER llmstudio
+
 #h2o env for llmstudio
 ENV H2O_WAVE_APP_ADDRESS=http://127.0.0.1:8756
 ENV H2O_WAVE_MAX_REQUEST_SIZE=25MB
 ENV H2O_WAVE_NO_LOG=true
 ENV H2O_WAVE_PRIVATE_DIR="/download/@/workspace/output/download"
+
 #for llmstudio jupyter book h2ogpt
 EXPOSE 10101 8887 7860 5000
-CMD jupyter-lab --ip 0.0.0.0 --port=8887 --no-browser --notebook-dir=/workspace/notebook
+CMD jupyter-lab --ip 0.0.0.0 --port=8887 --no-browser
+
 
