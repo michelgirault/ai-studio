@@ -75,6 +75,6 @@ ENV H2O_WAVE_PRIVATE_DIR="/download/@/workspace/output/download"
 
 #for llmstudio jupyter book h2ogpt
 EXPOSE 10101 8887 7860 5000
-CMD jupyter-lab --ip 0.0.0.0 --port 8887 --no-browser
+CMD jupyter-lab --ip=0.0.0.0 --port=8887 --no-browser
 
 
