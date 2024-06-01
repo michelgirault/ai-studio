@@ -41,7 +41,7 @@ RUN $INSTALL_PIP \
     pickleshare \
     bash_kernel \
     s3contents \
-    c3cmd \
+    s3cmd \
     jupyter-app-launcher \
     wheel 
 
