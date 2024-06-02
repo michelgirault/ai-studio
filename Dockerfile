@@ -1,5 +1,6 @@
 FROM nvidia/cuda:12.3.1-base-ubuntu22.04
 
+#start with root to install packages
 #setup declaration
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NVIDIA_VISIBLE_DEVICES all
@@ -32,7 +33,7 @@ RUN add-apt-repository ppa:deadsnakes/ppa && \
 #clear
 RUN rm -rf /var/lib/apt/lists/*
 
-#install all python and pip
+#install all python and pip packages
 RUN $INSTALL_PIP \
     Wave \
     h2o-wave \
@@ -50,7 +51,7 @@ RUN $INSTALL_PIP \
 RUN python3 -m bash_kernel.install
 
 
-#based on llmstudio from h2o setup
+#based on llmstudio from h2o setup use uid not common
 
 RUN adduser --uid 1999 llmstudio
 USER llmstudio
@@ -62,10 +63,14 @@ USER root
 RUN \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 && \
     chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio
+
+#fix permission and add execution right
 RUN chmod +x /workspace/starter.sh
 RUN mkdir /workspace/notebook/apps && mv jp_app_launcher.yaml ${JUPYTER_APP_LAUNCHER_PATH}
 RUN chmod +x /workspace/notebook/apps && chown -R llmstudio:llmstudio /workspace/notebook/apps
 RUN chmod +x /workspace/notebook/ && chown -R llmstudio:llmstudio /workspace/notebook/
+
+#switch to the llmstudio user
 USER llmstudio
 
 #h2o env for llmstudio
@@ -74,8 +79,8 @@ ENV H2O_WAVE_MAX_REQUEST_SIZE=25MB
 ENV H2O_WAVE_NO_LOG=true
 ENV H2O_WAVE_PRIVATE_DIR="/download/@/workspace/output/download"
 
-#for llmstudio jupyter book h2ogpt
+#for llmstudio jupyter book h2ogpt & openai api
 EXPOSE 10101 8887 7860 5000
-CMD jupyter-lab --ip=0.0.0.0 --port=8887 --no-browser --allow-root --notebook-dir=/workspace/notebook
+CMD ["/bin/bash", "-c", "./starter.sh"]
 
 
