@@ -80,7 +80,8 @@ ENV H2O_WAVE_NO_LOG=true
 ENV H2O_WAVE_PRIVATE_DIR="/download/@/workspace/output/download"
 
 #for llmstudio jupyter book h2ogpt & openai api
-EXPOSE 10101 8887 7860 5000
+EXPOSE 8887
+EXPOSE 5000
 CMD ["/bin/bash", "-c", "./starter.sh"]
 
 
