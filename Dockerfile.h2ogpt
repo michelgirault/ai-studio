@@ -1,0 +1,60 @@
+FROM nvidia/cuda:12.3.1-base-ubuntu22.04
+
+#start with root to install packages
+#setup declaration
+ENV DEBIAN_FRONTEND=noninteractive
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
+ENV INSTALL_APT="apt install -y"
+ENV INSTALL_PIP="python3 -m pip --no-cache-dir install --upgrade"
+ENV HOME=/home/llmstudio
+
+#start update current packages
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    software-properties-common \
+    libgoogle-perftools-dev \
+    bc \
+    ffmpeg \
+    pipenv 
+
+#install python and libs
+RUN add-apt-repository ppa:deadsnakes/ppa && \
+    $INSTALL_APT \
+    python3.10 \
+    python3-pip \
+    python3.10-distutils \
+    python3-venv \
+    python3-opencv
+
+#install all python and pip packages
+RUN $INSTALL_PIP \
+    Wave \
+    h2o-wave \
+    pickleshare \
+    s3cmd 
+
+#based on llmstudio from h2o setup use uid not common
+
+RUN adduser --uid 1999 llmstudio
+USER llmstudio
+
+#create working folder
+WORKDIR /workspace
+COPY . /workspace
+USER root
+RUN \
+    curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 && \
+    chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio && \
+    chmod -R a+w /workspace && chown -R llmstudio:llmstudio /workspace
+
+#fix permission and add execution right
+RUN chmod +x /workspace/starter-h2ogpt.sh
+
+#switch to the llmstudio user
+USER llmstudio
+
+#for llmstudio jupyter book h2ogpt & openai api
+EXPOSE 7860 5000
+CMD ["/bin/bash", "-c", "./starter-h2ogpt.sh"]
