@@ -27,6 +27,7 @@ RUN apt-get update && apt-get install -y \
     vim \
     man \
     git-lfs \
+    kmod \
     curl \
     software-properties-common \
     libgoogle-perftools-dev \
