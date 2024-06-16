@@ -74,8 +74,8 @@ RUN adduser --uid 1999 llmstudio
 USER llmstudio
 
 #create working folder
-WORKDIR /workspace
-COPY . /workspace
+WORKDIR /${APP_PATH}
+COPY . /${APP_PATH}
 
 USER root
 
@@ -88,10 +88,10 @@ RUN \
     chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio
 
 #fix permission and add execution right
-RUN chmod +x /workspace/starter.sh
-RUN mkdir /workspace/notebook/apps && mv jp_app_launcher.yaml ${JUPYTER_APP_LAUNCHER_PATH}
-RUN chmod +x /workspace/notebook/apps && chown -R llmstudio:llmstudio /workspace/notebook/apps
-RUN chmod +x /workspace/notebook/ && chown -R llmstudio:llmstudio /workspace/notebook/
+RUN chmod +x /${APP_PATH}/starter.sh
+RUN mkdir /${APP_PATH}/notebook/apps && mv jp_app_launcher.yaml ${JUPYTER_APP_LAUNCHER_PATH}
+RUN chmod +x /${APP_PATH}/notebook/apps && chown -R llmstudio:llmstudio /workspace/notebook/apps
+RUN chmod +x /${APP_PATH}/notebook/ && chown -R llmstudio:llmstudio /workspace/notebook/
 
 #switch to the llmstudio user
 USER llmstudio
@@ -100,11 +100,10 @@ USER llmstudio
 ENV H2O_WAVE_APP_ADDRESS=http://127.0.0.1:8756
 ENV H2O_WAVE_MAX_REQUEST_SIZE=25MB
 ENV H2O_WAVE_NO_LOG=true
-ENV H2O_WAVE_PRIVATE_DIR="/download/@/workspace/output/download"
+ENV H2O_WAVE_PRIVATE_DIR="/download/@/${APP_PATH}/output/download"
 
-#for llmstudio jupyter book h2ogpt & openai api
+#for llmstudio jupyter
 EXPOSE 8887
-EXPOSE 5000
 CMD ["/bin/bash", "-c", "./starter.sh"]
 
 
