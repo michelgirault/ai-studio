@@ -8,6 +8,7 @@ ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 ENV INSTALL_APT="apt install -y"
 ENV INSTALL_PIP="python3 -m pip --no-cache-dir install --upgrade"
 ENV HOME=/home/llmstudio
+ENV APP_PATH=/app
 ENV JUPYTER_APP_LAUNCHER_PATH=/workspace/notebook/apps
 
 #start update current packages
@@ -38,10 +39,6 @@ RUN apt-get update && apt-get install -y \
     libglvnd-dev \
     pkg-config \
     pipenv 
-
-#run fix gpu driver vultr
-RUN bash script-gpu-install.sh
-RUN apt install -y vultr-nvidia-client-drivers
 
 #install python and libs
 RUN add-apt-repository ppa:deadsnakes/ppa && \
@@ -79,7 +76,13 @@ USER llmstudio
 #create working folder
 WORKDIR /workspace
 COPY . /workspace
+
 USER root
+
+#run fix gpu driver vultr
+RUN bash script-gpu-install.sh
+RUN apt install -y vultr-nvidia-client-drivers
+
 RUN \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 && \
     chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio
