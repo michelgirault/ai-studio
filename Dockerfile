@@ -9,7 +9,7 @@ ENV INSTALL_APT="apt install -y"
 ENV INSTALL_PIP="python3 -m pip --no-cache-dir install --upgrade"
 ENV HOME=/home/llmstudio
 ENV APP_PATH=/app
-ENV JUPYTER_APP_LAUNCHER_PATH=/workspace/notebook/apps
+ENV JUPYTER_APP_LAUNCHER_PATH=${APP_PATH}/notebook/apps
 
 #start update current packages
 RUN apt-get update && apt-get install -y \
@@ -74,8 +74,8 @@ RUN adduser --uid 1999 llmstudio
 USER llmstudio
 
 #create working folder
-WORKDIR /${APP_PATH}
-COPY . /${APP_PATH}
+WORKDIR ${APP_PATH}
+COPY . ${APP_PATH}
 
 USER root
 
@@ -88,10 +88,10 @@ RUN \
     chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio
 
 #fix permission and add execution right
-RUN chmod +x /${APP_PATH}/starter.sh
-RUN mkdir /${APP_PATH}/notebook/apps && mv jp_app_launcher.yaml ${JUPYTER_APP_LAUNCHER_PATH}
-RUN chmod +x /${APP_PATH}/notebook/apps && chown -R llmstudio:llmstudio /workspace/notebook/apps
-RUN chmod +x /${APP_PATH}/notebook/ && chown -R llmstudio:llmstudio /workspace/notebook/
+RUN chmod +x ${APP_PATH}/starter.sh
+RUN mkdir ${APP_PATH}/notebook/apps && mv jp_app_launcher.yaml ${JUPYTER_APP_LAUNCHER_PATH}
+RUN chmod +x ${APP_PATH}/notebook/apps && chown -R llmstudio:llmstudio ${APP_PATH}/notebook/apps
+RUN chmod +x ${APP_PATH}/notebook/ && chown -R llmstudio:llmstudio ${APP_PATH}/notebook/
 
 #switch to the llmstudio user
 USER llmstudio
