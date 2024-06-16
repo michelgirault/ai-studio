@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.4.1-base-ubuntu22.04
+FROM ubuntu:jammy
 
 #start with root to install packages
 #setup declaration
@@ -13,13 +13,35 @@ ENV JUPYTER_APP_LAUNCHER_PATH=/workspace/notebook/apps
 #start update current packages
 RUN apt-get update && apt-get install -y \
     git \
+    ethtool \
+    wget \
+    build-essential \
+    zlib1g \
+    cmake \
+    ca-certificates \
+    lsb-release \
+    apache2-utils \
+    gnupg2 \
+    unzip \
+    vim \
+    man \
     git-lfs \
     curl \
     software-properties-common \
     libgoogle-perftools-dev \
     bc \
     ffmpeg \
+    linux-headers-generic \
+    libopenblas-dev \
+    liblapack-dev \
+    libegl1 \
+    libglvnd-dev \
+    pkg-config \
     pipenv 
+
+#run fix gpu driver vultr
+RUN bash script-gpu-install.sh
+RUN apt install -y vultr-nvidia-client-drivers
 
 #install python and libs
 RUN add-apt-repository ppa:deadsnakes/ppa && \
@@ -46,10 +68,8 @@ RUN $INSTALL_PIP \
     jupyter-app-launcher \
     wheel 
 
-
 #install spec for bash kernel
 RUN python3 -m bash_kernel.install
-
 
 #based on llmstudio from h2o setup use uid not common
 
