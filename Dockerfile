@@ -93,6 +93,7 @@ RUN chmod +x ${APP_PATH}/starter.sh
 RUN mkdir ${APP_PATH}/notebook/apps && mv jp_app_launcher.yaml ${JUPYTER_APP_LAUNCHER_PATH}
 RUN chmod +x ${APP_PATH}/notebook/apps && chown -R llmstudio:llmstudio ${APP_PATH}/notebook/apps
 RUN chmod +x ${APP_PATH}/notebook/ && chown -R llmstudio:llmstudio ${APP_PATH}/notebook/
+#folder for s3 sync
 RUN mkdir ${APP_PATH}/.s3folder && chown -R llmstudio:llmstudio ${APP_PATH}/.s3folder
 
 #switch to the llmstudio user
