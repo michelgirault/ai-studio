@@ -81,8 +81,8 @@ COPY . ${APP_PATH}
 USER root
 
 #run fix gpu driver vultr
-RUN bash script-gpu-install.sh
-RUN apt install -y vultr-nvidia-client-drivers
+#RUN bash script-gpu-install.sh
+#RUN apt install -y vultr-nvidia-client-drivers
 
 RUN \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 && \
