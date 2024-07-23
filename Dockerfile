@@ -63,6 +63,7 @@ RUN $INSTALL_PIP \
     bash_kernel \
     s3contents \
     s3cmd \
+    awscli \
     jupyter-app-launcher \
     wheel 
 
