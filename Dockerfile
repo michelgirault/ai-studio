@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.5.1-runtime-ubuntu22.04
+FROM nvidia/cuda:12.5.1-base-ubuntu22.04
 #start with root to install packages
 #setup declaration
 ENV DEBIAN_FRONTEND=noninteractive
