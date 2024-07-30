@@ -47,7 +47,8 @@ RUN add-apt-repository ppa:deadsnakes/ppa && \
     python3-pip \
     python3.10-distutils \
     python3-venv \
-    python3-opencv
+    python3-opencv \
+    python3-tk
 
 #clear
 RUN rm -rf /var/lib/apt/lists/*
