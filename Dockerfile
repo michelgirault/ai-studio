@@ -110,6 +110,7 @@ ENV H2O_WAVE_PRIVATE_DIR="/download/@/${APP_PATH}/output/download"
 #for llmstudio jupyter
 EXPOSE 8887
 EXPOSE 7860
+EXPOSE 10101
 CMD ["/bin/bash", "-c", "./starter.sh"]
 
 
