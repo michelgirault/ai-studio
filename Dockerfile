@@ -9,6 +9,7 @@ ENV INSTALL_PIP="python3 -m pip --no-cache-dir install --upgrade"
 ENV HOME=/home/llmstudio
 ENV APP_PATH=/app
 ENV JUPYTER_APP_LAUNCHER_PATH=${APP_PATH}/notebook/apps
+ENV PATH="$PATH:$HOME/.local/bin"
 
 #start update current packages
 RUN apt-get update && apt-get install -y \
