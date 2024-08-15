@@ -94,9 +94,6 @@ RUN \
     chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio &&\
     chmod +x ${APP_PATH}/starter.sh &&\
     chmod -R a+w ${APP_PATH} && chown -R llmstudio:llmstudio ${APP_PATH}
-RUN ls /app/apps/llama-factory/
-RUN ls -la /home/llmstudio
-RUN llamafactory-cli
 
 #switch to the llmstudio user
 USER llmstudio
