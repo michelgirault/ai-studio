@@ -8,6 +8,7 @@ ENV INSTALL_APT="apt install -y"
 ENV INSTALL_PIP="python3 -m pip --no-cache-dir install --upgrade"
 ENV HOME=/home/llmstudio
 ENV APP_PATH=/app
+ENV JUPYTER_APP_LAUNCHER_PATH=${APP_PATH}/notebook/apps
 ENV PATH="$PATH:$HOME/.local/bin"
 
 #start update current packages
@@ -56,54 +57,58 @@ RUN rm -rf /var/lib/apt/lists/*
 #install all python and pip packages
 RUN $INSTALL_PIP \
     Wave \
+    h2o-wave \
     jupyterlab \
     notebook \
     pickleshare \
+    bash_kernel \
     huggingface_hub \
     awscli \
-    wheel \
-    perftool \
-    fastapi \
-    pickleshare
+    jupyter-app-launcher \
+    wheel 
+
+#install spec for bash kernel
+RUN python3 -m bash_kernel.install
 
 #based on llmstudio from h2o setup use uid not common
 
 RUN adduser --uid 1999 llmstudio
+USER llmstudio
 
 #create working folder
 WORKDIR ${APP_PATH}
 COPY . ${APP_PATH}
 
+USER root
 
-#prepare folders
-RUN mkdir apps/
-RUN mkdir models/
-RUN mkdir datasets/
-
-#install git repo for the fine tune studio
-RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git apps/stable-diffusion-webui/
-RUN cd apps/stable-diffusion-webui/ && \
-    pip install -r requirements.txt --no-cache-dir
-#llama factory
-RUN git clone --depth 1 https://github.com/hiyouga/LLaMA-Factory.git apps/llama-factory/
-RUN cd apps/llama-factory/ && \
-    pip install -e .[torch,metrics]
+#run fix gpu driver vultr
+#RUN bash script-gpu-install.sh
+#RUN apt install -y vultr-nvidia-client-drivers
 
 RUN \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 && \
-    chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio &&\
-    chmod +x ${APP_PATH}/starter.sh &&\
-    chmod -R a+w ${APP_PATH} && chown -R llmstudio:llmstudio ${APP_PATH}
-RUN ls /app/apps/llama-factory/
-RUN ls -la /home/llmstudio
-RUN llamafactory-cli
+    chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio
+
+#fix permission and add execution right
+RUN chmod +x ${APP_PATH}/starter.sh
+RUN mkdir ${APP_PATH}/notebook/apps && mv jp_app_launcher.yaml ${JUPYTER_APP_LAUNCHER_PATH}
+RUN chmod +x ${APP_PATH}/notebook/apps && chown -R llmstudio:llmstudio ${APP_PATH}/notebook/apps
+RUN chmod +x ${APP_PATH}/notebook/ && chown -R llmstudio:llmstudio ${APP_PATH}/notebook/
+
 
 #switch to the llmstudio user
 USER llmstudio
 
-#for llmstudio 
-EXPOSE 7861
+#h2o env for llmstudio
+ENV H2O_WAVE_APP_ADDRESS=http://127.0.0.1:8756
+ENV H2O_WAVE_MAX_REQUEST_SIZE=25MB
+ENV H2O_WAVE_NO_LOG=true
+ENV H2O_WAVE_PRIVATE_DIR="/download/@/${APP_PATH}/output/download"
+
+#for llmstudio jupyter
+EXPOSE 8887
 EXPOSE 7860
+EXPOSE 10101
 CMD ["/bin/bash", "-c", "./starter.sh"]
 
 
