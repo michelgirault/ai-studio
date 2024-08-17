@@ -64,6 +64,7 @@ RUN $INSTALL_PIP \
     wheel \
     perftool \
     fastapi \
+    xtuner \
     deepspeed \
     pickleshare
 
