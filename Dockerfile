@@ -64,6 +64,7 @@ RUN $INSTALL_PIP \
     wheel \
     perftool \
     fastapi \
+    deepspeed \
     pickleshare
 
 #based on llmstudio from h2o setup use uid not common
