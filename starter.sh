@@ -14,8 +14,8 @@ STABLE_APP="apps/stable-diffusion-webui"
 
 #aws s3 sync --endpoint-url=$S3_ENDPOINT s3://$S3_BUCKET=$ $S3_DATASETS_FOLDER --no-progress --quiet
 
-cd $LLAMA_APP && CUDA_VISIBLE_DEVICES=0 GRADIO_SHARE=1 GRADIO_SERVER_PORT=7861 llamafactory-cli webui --port 7861 &
+#cd $LLAMA_APP && CUDA_VISIBLE_DEVICES=0 GRADIO_SHARE=1 GRADIO_SERVER_PORT=7861 llamafactory-cli webui --port 7861 &
 cd $STABLE_APP && pwd && ./webui.sh -f --port 7860 &
+jupyter-lab --ip 0.0.0.0 --port 7861 --no-browser --allow-root --notebook-dir=/app/notebook 
+
 wait
-#startup soft
-#jupyter-lab --ip 0.0.0.0 --port 8887 --no-browser --allow-root --notebook-dir=/app/notebook 
