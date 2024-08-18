@@ -50,6 +50,7 @@ RUN add-apt-repository ppa:deadsnakes/ppa && \
     python3-venv \
     python3-opencv \
     python3-tk
+RUN cp /usr/bin/python3 /usr/bin/python
 
 #clear
 RUN rm -rf /var/lib/apt/lists/*
