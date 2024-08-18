@@ -39,6 +39,7 @@ RUN apt-get update && apt-get install -y \
     libglvnd-dev \
     pkg-config \
     nvidia-cuda-toolkit \
+    libaio \
     pipenv 
 
 #install python and libs
