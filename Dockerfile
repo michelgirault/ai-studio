@@ -84,15 +84,6 @@ RUN mkdir apps/
 RUN mkdir models/
 RUN mkdir datasets/
 
-#install git repo for the fine tune studio
-RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git apps/stable-diffusion-webui/
-RUN cd apps/stable-diffusion-webui/ && \
-    pip install -r requirements.txt --no-cache-dir
-#llama factory
-RUN git clone --depth 1 https://github.com/hiyouga/LLaMA-Factory.git apps/llama-factory/
-RUN cd apps/llama-factory/ && \
-    pip install -e .[torch,metrics]
-
 RUN \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 && \
     chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio &&\
