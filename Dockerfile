@@ -58,8 +58,6 @@ RUN rm -rf /var/lib/apt/lists/*
 #install all python and pip packages
 RUN $INSTALL_PIP \
     Wave \
-    jupyterlab \
-    notebook \
     pickleshare \
     huggingface_hub \
     awscli \
@@ -67,6 +65,8 @@ RUN $INSTALL_PIP \
     perftool \
     fastapi \
     xtuner \
+    nodejs \
+    npm \
     deepspeed \
     pickleshare
 
@@ -78,6 +78,11 @@ RUN adduser --uid 1999 llmstudio
 WORKDIR ${APP_PATH}
 COPY . ${APP_PATH}
 
+#install jupyter
+RUN $INSTALL_PIP \
+    jupyterlab \
+    jupyterhub \
+    notebook
 
 #prepare folders
 RUN mkdir apps/
