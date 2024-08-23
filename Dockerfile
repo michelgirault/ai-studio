@@ -71,7 +71,6 @@ RUN $INSTALL_PIP \
     pickleshare
 
 #based on llmstudio from h2o setup use uid not common
-
 RUN adduser --uid 1999 llmstudio
 
 #create working folder
