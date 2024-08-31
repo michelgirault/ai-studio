@@ -87,7 +87,7 @@ RUN mkdir models/
 RUN mkdir datasets/
 
 RUN \
-    curl -sS https://bootstrap.pypa.io/get-pip.py. | python3.10 && \
+    curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 && \
     chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio &&\
     chmod +x ${APP_PATH}/starter.sh &&\
     chmod -R a+w ${APP_PATH} && chown -R llmstudio:llmstudio ${APP_PATH
