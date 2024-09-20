@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.5.1-base-ubuntu22.04
+FROM nvidia/cuda:12.6.1-cudnn-runtime-ubuntu22.04
 #start with root to install packages
 #setup declaration
 ENV DEBIAN_FRONTEND=noninteractive
@@ -39,6 +39,7 @@ RUN apt-get update && apt-get install -y \
     libglvnd-dev \
     pkg-config \
     nvidia-cuda-toolkit \
+    nvidia-tensorrt \
     pipenv 
 
 #install python and libs
