@@ -39,7 +39,6 @@ RUN apt-get update && apt-get install -y \
     libglvnd-dev \
     pkg-config \
     nvidia-cuda-toolkit \
-    nvidia-tensorrt \
     pipenv 
 
 #install python and libs
@@ -67,6 +66,7 @@ RUN $INSTALL_PIP \
     fastapi \
     xtuner \
     deepspeed \
+    tensorrt \
     pickleshare
 
 #based on llmstudio from h2o setup use uid not common
