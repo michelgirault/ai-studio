@@ -91,7 +91,7 @@ RUN \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 && \
     chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio &&\
     chmod +x ${APP_PATH}/starter.sh &&\
-    chmod -R a+w ${APP_PATH} && chown -R llmstudio:llmstudio ${APP_PATH
+    chmod -R a+w ${APP_PATH} && chown -R llmstudio:llmstudio ${APP_PATH}
 #install nodejs
 RUN curl -s https://deb.nodesource.com/setup_18.x | bash
 RUN apt install -y nodejs
