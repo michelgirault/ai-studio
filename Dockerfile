@@ -67,6 +67,9 @@ RUN $INSTALL_PIP \
     xtuner \
     deepspeed \
     tensorrt \
+    diffusers \
+    datasets \
+    wandb \
     pickleshare
 
 #based on llmstudio from h2o setup use uid not common
