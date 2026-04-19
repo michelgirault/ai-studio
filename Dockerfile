@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.9.1-cudnn-runtime-ubuntu22.04
+FROM nvidia/cuda:12.5.1-cudnn-runtime-ubuntu22.04
 #start with root to install packages
 #setup declaration
 ENV DEBIAN_FRONTEND=noninteractive
@@ -87,7 +87,7 @@ USER llmstudio
 
 #for llmstudio 
 EXPOSE 7861
-EXPOSE 7860
+EXPOSE 10101
 CMD ["/bin/bash", "-c", "./starter.sh"]
 
 
