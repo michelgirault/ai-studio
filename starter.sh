@@ -1,17 +1,34 @@
 #!/bin/bash
+set -e
 
-#custom script for ai model workflow builder
+# Make sure persistent dirs exist on the workspace volume
+mkdir -p /workspace/aistudio/.huggingface/hub \
+         /workspace/aistudio/.huggingface/datasets \
+         /workspace/aistudio/.aws \
+         /workspace/aistudio/notebooks \
+         /workspace/aistudio/datasets \
+         /workspace/aistudio/checkpoints \
+         /workspace/aistudio/models
 
-#Load env variable 
-aws configure set aws_access_key_id $aws_access_key_id
-aws configure set aws_secret_access_key $aws_secret_access_key
+# Show GPU info
+echo "=== GPU ==="
+nvidia-smi || echo "No GPU detected"
+echo ""
 
-#make sure the folder existing within the volume
+# Show storage
+echo "=== Workspace ==="
+df -h /workspace/aistudio/ 2>/dev/null || true
+echo ""
 
-#huggingface-cli download --token $HF_TOKEN stabilityai/stable-diffusion-2 --local-dir /app/notebook/apps/models
-
-#aws s3 sync --endpoint-url=$S3_ENDPOINT s3://$S3_BUCKET=$ $S3_DATASETS_FOLDER --no-progress --quiet
-
-#install missing package
-pip install wheel --no-cache-dir
-jupyter-lab --ip 0.0.0.0 --port 7861 --no-browser --allow-root --notebook-dir=/app/notebook
+# Launch JupyterLab
+# - bound to 0.0.0.0 so RunPod can proxy it
+# - root_dir is /workspace so notebooks live on persistent volume
+# - token auth (printed in logs)
+exec jupyter lab \
+    --ip=0.0.0.0 \
+    --port=8888 \
+    --no-browser \
+    --ServerApp.root_dir=/workspace/aistudio/ \
+    --ServerApp.allow_origin='*' \
+    --ServerApp.allow_remote_access=True \
+    --ServerApp.terminado_settings='{"shell_command":["/bin/bash"]}'

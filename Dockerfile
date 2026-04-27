@@ -1,93 +1,91 @@
 FROM nvidia/cuda:12.5.1-cudnn-runtime-ubuntu22.04
-#start with root to install packages
-#setup declaration
+
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
-ENV INSTALL_APT="apt install -y"
-ENV INSTALL_PIP="python3 -m pip --no-cache-dir install --upgrade --timeout=100"
+
 ENV HOME=/home/llmstudio
 ENV APP_PATH=/app
-ENV PATH="$PATH:$HOME/.local/bin"
+ENV WORKSPACE=/workspace
 
-#start update current packages
+# All persistent state lives under /workspace so it survives pod restarts
+ENV HF_HOME=/workspace/.huggingface
+ENV TRANSFORMERS_CACHE=/workspace/.huggingface/hub
+ENV HF_DATASETS_CACHE=/workspace/.huggingface/datasets
+ENV AWS_SHARED_CREDENTIALS_FILE=/workspace/.aws/credentials
+ENV AWS_CONFIG_FILE=/workspace/.aws/config
+ENV PATH="$HOME/.local/bin:${PATH}"
+
+# System packages
 RUN apt-get update && apt-get install -y \
-    git \
-    ethtool \
-    wget \
-    build-essential \
-    zlib1g \
-    cmake \
-    ca-certificates \
-    lsb-release \
-    apache2-utils \
-    gnupg2 \
-    unzip \
-    vim \
-    man \
-    kmod \
-    curl \
-    software-properties-common \
-    libgoogle-perftools-dev \
-    bc \
-    ffmpeg \
-    linux-headers-generic \
-    libopenblas-dev \
-    liblapack-dev \
-    libegl1 \
-    libglvnd-dev \
-    pkg-config \
-    nvidia-cuda-toolkit 
+    git wget curl ca-certificates build-essential cmake pkg-config \
+    software-properties-common gnupg2 unzip vim \
+    libgoogle-perftools-dev ffmpeg libegl1 libglvnd-dev \
+    libopenblas-dev liblapack-dev \
+    fuse rclone
 
-#install python and libs
 RUN add-apt-repository ppa:deadsnakes/ppa && \
-    $INSTALL_APT \
-    python3.10 \
-    python3-pip \
-    python3.10-distutils \
-    python3-venv 
+    apt install -y python3.10 python3-pip python3.10-distutils python3.10-venv python3.10-dev
 
-RUN cp /usr/bin/python3 /usr/bin/python
+RUN ln -sf /usr/bin/python3.10 /usr/bin/python && \
+    ln -sf /usr/bin/python3.10 /usr/bin/python3
 
-#clear
 RUN rm -rf /var/lib/apt/lists/*
 
-RUN apt update -y && apt upgrade -y 
+# AWS CLI v2
+RUN curl -L "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip && \
+    cd /tmp && unzip awscliv2.zip && ./aws/install && \
+    rm -rf /tmp/aws /tmp/awscliv2.zip
 
+# Create user
+RUN adduser --uid 1999 --disabled-password --gecos "" llmstudio
 
+# Python ML stack — pinned to current stable versions
+RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel
 
-#based on llmstudio from h2o setup use uid not common
-RUN adduser --uid 1999 llmstudio
+# Core ML stack — install as root so /usr/local/lib is used
+RUN python -m pip install --no-cache-dir \
+    torch torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/cu121
 
-#create working folder
-WORKDIR ${APP_PATH}
-COPY . ${APP_PATH}
+RUN python -m pip install --no-cache-dir \
+    transformers \
+    datasets \
+    accelerate \
+    peft \
+    trl \
+    bitsandbytes \
+    sentencepiece \
+    safetensors \
+    huggingface_hub[cli] \
+    evaluate \
+    tokenizers
 
-#install jupyter
-RUN $INSTALL_PIP \
+# Data / utility libs
+RUN python -m pip install --no-cache-dir \
+    numpy pandas pyarrow \
+    boto3 s3fs \
+    scikit-learn matplotlib seaborn \
+    tqdm wandb tensorboard \
+    ipywidgets
+
+# JupyterLab
+RUN python -m pip install --no-cache-dir \
     jupyterlab \
-    jupyterhub \
+    jupyterlab-git \
     notebook
 
-#prepare folders
-RUN mkdir apps/
-RUN mkdir models/
-RUN mkdir datasets/
+# Workspace + permissions
+RUN mkdir -p ${WORKSPACE} ${APP_PATH} ${HOME} && \
+    chown -R llmstudio:llmstudio ${WORKSPACE} ${APP_PATH} ${HOME}
 
+# Copy starter
+COPY --chown=llmstudio:llmstudio starter.sh ${APP_PATH}/starter.sh
+RUN chmod +x ${APP_PATH}/starter.sh
 
-
-RUN \
-    curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 && \
-    chmod -R a+w /home/llmstudio && chown -R llmstudio:llmstudio /home/llmstudio &&\
-    chmod +x ${APP_PATH}/starter.sh &&\
-    chmod -R a+w ${APP_PATH} && chown -R llmstudio:llmstudio ${APP_PATH}
-
-#switch to the llmstudio user
 USER llmstudio
+WORKDIR ${WORKSPACE}
 
-#for llmstudio 
-EXPOSE 7861
-EXPOSE 10101
-CMD ["/bin/bash", "-c", "./starter.sh"]
+EXPOSE 8888
 
-
+CMD ["/bin/bash", "-c", "/app/starter.sh"]
